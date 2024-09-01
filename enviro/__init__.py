@@ -13,9 +13,12 @@ model = None
 if 56 in i2c_devices: # 56 = colour / light sensor and only present on Indoor
   model = "indoor"
 elif 35 in i2c_devices: # 35 = ltr-599 on grow & weather
-  pump3_pin = Pin(12, Pin.IN, Pin.PULL_UP)
-  model = "grow" if pump3_pin.value() == False else "weather"    
-  pump3_pin.init(pull=None)
+  if 119 in i2c_devices: # 119 = bme688 on enviro+ pack
+    model = "pluspack"
+  else:
+    pump3_pin = Pin(12, Pin.IN, Pin.PULL_UP)
+    model = "grow" if pump3_pin.value() == False else "weather"
+    pump3_pin.init(pull=None)
 else:    
   model = "urban" # otherwise it's urban..
 
@@ -29,6 +32,8 @@ def get_board():
     import enviro.boards.weather as board
   if model == "urban":
     import enviro.boards.urban as board
+  if model == "pluspack":
+    import enviro.boards.pluspack as board
   return board
   
 # set up the activity led
@@ -369,6 +374,8 @@ def get_wake_reason():
   # TODO Temporarily removing this as false reporting on non-camera boards
   #elif not external_trigger_pin.value():
   #  wake_reason = WAKE_REASON_EXTERNAL_TRIGGER
+  elif get_board() == "pluspack" and wakeup.get_gpio_state() & (1 << PROXIMITY_INTERRUPT_PIN):
+    wake_reason = WAKE_REASON_PROXIMITY_SENSOR
   elif vbus_present:
     wake_reason = WAKE_REASON_USB_POWERED
   return wake_reason
@@ -381,6 +388,7 @@ def wake_reason_name(wake_reason):
     WAKE_REASON_BUTTON_PRESS: "button",
     WAKE_REASON_RTC_ALARM: "rtc_alarm",
     WAKE_REASON_EXTERNAL_TRIGGER: "external_trigger",
+    WAKE_REASON_PROXIMITY_SENSOR: "proximity_sensor",
     WAKE_REASON_RAIN_TRIGGER: "rain_sensor",
     WAKE_REASON_USB_POWERED: "usb_powered"
   }

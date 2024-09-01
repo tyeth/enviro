@@ -8,6 +8,7 @@ ENVIRO_GROW                   = 2
 ENVIRO_WEATHER                = 3
 ENVIRO_URBAN                  = 4
 ENVIRO_CAMERA                 = 5
+ENVIRO_PLUS_PACK              = 6
 
 # common pins
 HOLD_VSYS_EN_PIN              = 2
@@ -18,6 +19,7 @@ ACTIVITY_LED_PIN              = 6
 BUTTON_PIN                    = 7
 RTC_ALARM_PIN                 = 8
 RAIN_PIN                      = 10
+PROXIMITY_INTERRUPT_PIN       = 22
 
 # system pins
 WIFI_CS_PIN                   = 25
@@ -30,6 +32,7 @@ WAKE_REASON_RTC_ALARM         = 3
 WAKE_REASON_EXTERNAL_TRIGGER  = 4
 WAKE_REASON_RAIN_TRIGGER      = 5
 WAKE_REASON_USB_POWERED       = 6
+WAKE_REASON_PROXIMITY_SENSOR  = 7
 
 # warning led states
 WARN_LED_OFF = 0
