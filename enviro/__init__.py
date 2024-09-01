@@ -313,11 +313,15 @@ def is_clock_set():
 
 # connect to wifi and attempt to fetch the current time from an ntp server
 def sync_clock_from_ntp():
-  from phew import ntp
   if not connect_to_wifi():
     return False
-  #TODO Fetch only does one attempt. Can also optionally set Pico RTC (do we want this?)
-  timestamp = ntp.fetch()
+  if config.adafruit_io_username and config.adafruit_io_key:
+    from enviro.destinations.adafruit_io import fetch
+    timestamp = fetch()
+  else:
+    from phew import ntp
+    #TODO Fetch only does one attempt. Can also optionally set Pico RTC (do we want this?)
+    timestamp = ntp.fetch()
   if not timestamp:
     logging.error("  - failed to fetch time from ntp server")
     return False  
