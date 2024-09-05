@@ -35,7 +35,7 @@ def add_missing_config_settings():
     config.timezone
   except AttributeError:
     warn_missing_config_setting("timezone")
-    config.timezone = None
+    config.timezone = None  # leave on auto by IP lookup
 
 
 def warn_missing_config_setting(setting):
