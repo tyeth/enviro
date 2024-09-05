@@ -117,7 +117,10 @@ def provision_step_4_destination(request):
     # adafruit io
     config.adafruit_io_username = request.form["adafruit_io_username"]
     config.adafruit_io_key = request.form["adafruit_io_key"]
-    config.timezone = request.form["timezone"] if str(request.form["timezone"]).trim() != "" else None
+    try:
+        config.timezone = request.form["timezone"].strip() if request.form["timezone"].strip() != "" else None
+    except ValueError:
+        config.timezone = None
 
     # influxdb
     config.influxdb_org = request.form["influxdb_org"]

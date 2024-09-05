@@ -316,15 +316,15 @@ def sync_clock_from_ntp():
   if not connect_to_wifi():
     return False
   if config.adafruit_io_username and config.adafruit_io_key:
-    from enviro.destinations.adafruit_io import fetch
-    timestamp = fetch()
+    from enviro.destinations.adafruit_io import fetch_time
+    timestamp = fetch_time()
   else:
     from phew import ntp
     #TODO Fetch only does one attempt. Can also optionally set Pico RTC (do we want this?)
     timestamp = ntp.fetch()
   if not timestamp:
     logging.error("  - failed to fetch time from ntp server")
-    return False  
+    return False
 
   # fixes an issue where sometimes the RTC would not pick up the new time
   i2c.writeto_mem(0x51, 0x00, b'\x10') # reset the rtc so we can change the time

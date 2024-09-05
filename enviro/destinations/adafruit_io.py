@@ -2,38 +2,55 @@ from enviro import logging
 from enviro.constants import *
 import urequests
 import config
+import time
 
 def log_destination():
   logging.info(f"> uploading cached readings to Adafruit.io: {config.adafruit_io_username}")
 
-def fetch_time(synch_with_rtc=True, timeout=10):
+def fetch_time(synch_with_rtc=True, timeout=15, retry=True):
   timestamp = None
   try:
 
-    url = f"http://io.adafruit.com/api/v2/{config.adafruit_io_user}/integrations/time/struct"
-    if config.timezone:
+    url = f"http://io.adafruit.com/api/v2/{config.adafruit_io_username}/integrations/time/struct"
+    if config.timezone is not None:
       url += f"?tz={config.timezone}"
 
     # send the payload
     headers = {'X-AIO-Key': config.adafruit_io_key, 'Content-Type': 'application/json'}
 
     try:
-      result = urequests.post(url, headers=headers, timeout=timeout)
+      result = urequests.get(url, headers=headers, timeout=timeout)
 
       error_message = ""    
       try:
-        error_message = result.json()['error']
+        timestamp = result.json()
+        # e.g. 
+        #{
+        #   "year": 2019,
+        #   "mon": 12,
+        #   "mday": 2,
+        #   "hour": 18,
+        #   "min": 20,
+        #   "sec": 37,
+        #   "wday": 3,
+        #   "yday": 336,
+        #   "isdst": 0
+        # }
+        error_message = timestamp['error']
+        if error_message != "":
+          logging.error(f"An error occurred with the time service request: {error_message}")
       except (TypeError, KeyError):
         pass
 
       result.close()
 
-      # todo: if throttled or ignored or other error then wait 10seconds and try again
+      # todo: if throttled or ignored or other error then wait 3seconds and try again
       if result.status_code != 200:
-        logging.debug(f"  - fetch issue '{error_message}' ({result.status_code} - {result.reason.decode('utf-8')}): {url} returned {result.text}")
-        import time
-        time.sleep(10)
-        return fetch(synch_with_rtc, timeout)
+        logging.debug(f"  - fetch issue '{error_message}' ({result.status_code} - {result.reason.decode('utf-8')}):")
+        logging.debug(f" {url} returned {timestamp}")
+        if retry:
+          time.sleep(3)
+          return fetch_time(synch_with_rtc, timeout, retry=False)
 
     except Exception as exc:
       import sys, io
@@ -42,40 +59,27 @@ def fetch_time(synch_with_rtc=True, timeout=10):
       logging.debug(f"  - an exception occurred when fetching time from Adafruit.io: {buf.getvalue()}")
       return None
 
-    # e.g. 
-    #{
-    #   "year": 2019,
-    #   "mon": 12,
-    #   "mday": 2,
-    #   "hour": 18,
-    #   "min": 20,
-    #   "sec": 37,
-    #   "wday": 3,
-    #   "yday": 336,
-    #   "isdst": 0
-    # }
-    timestamp = result.json()
   except Exception as exc:
     import sys, io
     buf = io.StringIO()
     sys.print_exception(exc, buf)
     logging.debug(f"  - an exception occurred when fetching time from Adafruit.io: {buf.getvalue()}")
     return None
-
+  logging.debug(f"timestamp:{timestamp}")
   # if requested set the machines RTC to the fetched timestamp
   if synch_with_rtc:
+    import machine
     machine.RTC().datetime((
-      timestamp["year"], timestamp["mon"], timestamp["mday"],
-      timestamp["hour"], timestamp["min"], timestamp["sec"],
-      0
+      timestamp["year"], timestamp["mon"], timestamp["mday"], timestamp["wday"],
+      timestamp["hour"], timestamp["min"], timestamp["sec"], 0  # subseconds
     ))
   
   # return a localtime formatted timestamp
-  return time.mktime((
+  return time.gmtime(time.mktime((
     timestamp["year"], timestamp["mon"], timestamp["mday"],
     timestamp["hour"], timestamp["min"], timestamp["sec"],
-    0, 0
-  ))
+    timestamp["wday"], timestamp["yday"]
+  )))
 
 
 def upload_reading(reading, create_group = False):
