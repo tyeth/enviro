@@ -21,10 +21,10 @@ def fetch_time(synch_with_rtc=True, timeout=15, retry=True):
     try:
       result = urequests.get(url, headers=headers, timeout=timeout)
 
-      error_message = ""    
+      error_message = ""
       try:
         timestamp = result.json()
-        # e.g. 
+        # e.g.
         #{
         #   "year": 2019,
         #   "mon": 12,
@@ -73,7 +73,7 @@ def fetch_time(synch_with_rtc=True, timeout=15, retry=True):
       timestamp["year"], timestamp["mon"], timestamp["mday"], timestamp["wday"],
       timestamp["hour"], timestamp["min"], timestamp["sec"], 0  # subseconds
     ))
-  
+
   # return a localtime formatted timestamp
   return time.gmtime(time.mktime((
     timestamp["year"], timestamp["mon"], timestamp["mday"],
@@ -89,7 +89,7 @@ def upload_reading(reading, create_group = False):
     adafruit_io_group_name = "enviro"
     logging.info("  - adafruit_io_group_name not found in config.py, using default value of 'enviro'")
   username = config.adafruit_io_username
-  
+
   if create_group:
     payload = {
       "name": adafruit_io_group_name,
@@ -118,7 +118,7 @@ def upload_reading(reading, create_group = False):
   try:
     result = urequests.post(url, json=payload, headers=headers)
 
-    error_message = ""    
+    error_message = ""
     try:
       error_message = result.json()['error']
     except (TypeError, KeyError):
@@ -130,7 +130,7 @@ def upload_reading(reading, create_group = False):
 
     if result.status_code == 200:
       return UPLOAD_SUCCESS
-    
+
     if result.status_code == 404: # group not found
       if error_message.find("not found - There is no feed with the key"):
         logging.debug(f"  - upload issue '{error_message}' - Possibly missing group '{adafruit_io_group_name}' - will attempt to create it")
@@ -149,7 +149,7 @@ def upload_reading(reading, create_group = False):
       logging.debug(f"  - upload issue '{error_message}' - You may have run out of feeds to upload data to")
       return UPLOAD_SKIP_FILE
 
-    logging.debug(f"  - upload issue '{error_message}' ({result.status_code} - {result.reason.decode('utf-8')})")      
+    logging.debug(f"  - upload issue '{error_message}' ({result.status_code} - {result.reason.decode('utf-8')})")
 
   except Exception as exc:
     import sys, io

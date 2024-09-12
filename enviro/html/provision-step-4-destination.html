@@ -8,11 +8,11 @@
       <h2>Where are you uploading your data to?</h2>
       <p>Let's get real, data is nothing without analysis. Let's get the good stuff off this board and somewhere that we can make use of it.</p>
       <ul id="destinations" class="picker">
-        <li data-destination=""> 
+        <li data-destination="">
           Nowhere
           <p class="note">For now I just want to log this data locally and grab it over USB now and again.</p>
         </li>
-        <li data-destination="http" > 
+        <li data-destination="http" >
           A custom HTTP endpoint
           <p class="note">We'll make a request to your supplied URL with all of the data included.</p>
         </li>
@@ -28,7 +28,7 @@
           Adafruit IO
           <p class="note">A platform designed by our friends at Adafruit to store and display your data.</p>
         </li>
-      </ul>        
+      </ul>
     </section>
 
     <input type="hidden" id="destination" name="destination" value="{{config.destination}}" />
@@ -107,7 +107,7 @@
         <h2>HTTP authentication credentials (optional).</h2>
         <aside>Username and password if your endpoint support authentication.</aside>
         <fieldset>
-          <input type="text" name="custom_http_username" value="{{config.custom_http_username}}" placeholder="Username (e.g. data_junkie)" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" />        
+          <input type="text" name="custom_http_username" value="{{config.custom_http_username}}" placeholder="Username (e.g. data_junkie)" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" />
           <input type="text" name="custom_http_password" value="{{config.custom_http_password}}" placeholder="Password (e.g. ih3artd4ta)" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" />
         </fieldset>
       </div>
@@ -116,7 +116,7 @@
 
   <script>
     function selectDestination(destination) {
-      document.querySelectorAll("#destinations >li").forEach((listItem) => {          
+      document.querySelectorAll("#destinations >li").forEach((listItem) => {
         if(listItem.dataset.destination == destination) {
           listItem.classList.add("active")
         }else{

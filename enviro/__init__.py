@@ -14,9 +14,9 @@ if 56 in i2c_devices: # 56 = colour / light sensor and only present on Indoor
   model = "indoor"
 elif 35 in i2c_devices: # 35 = ltr-599 on grow & weather
   pump3_pin = Pin(12, Pin.IN, Pin.PULL_UP)
-  model = "grow" if pump3_pin.value() == False else "weather"    
+  model = "grow" if pump3_pin.value() == False else "weather"
   pump3_pin.init(pull=None)
-else:    
+else:
   model = "urban" # otherwise it's urban..
 
 # return the module that implements this board type
@@ -30,7 +30,7 @@ def get_board():
   if model == "urban":
     import enviro.boards.urban as board
   return board
-  
+
 # set up the activity led
 # ===========================================================================
 from machine import PWM, Timer
@@ -45,7 +45,7 @@ def activity_led(brightness):
   # gamma correct the brightness (gamma 2.8)
   value = int(pow(brightness / 100.0, 2.8) * 65535.0 + 0.5)
   activity_led_pwm.duty_u16(value)
-  
+
 activity_led_timer = Timer(-1)
 activity_led_pulse_speed_hz = 1
 def activity_led_callback(t):
@@ -159,7 +159,7 @@ def reconnect_wifi(ssid, password, country, hostname=None):
   import math
   import rp2
   import ubinascii
-  
+
   start_ms = time.ticks_ms()
 
   # Set country
@@ -215,7 +215,7 @@ def reconnect_wifi(ssid, password, country, hostname=None):
   # Print MAC
   mac = ubinascii.hexlify(wlan.config('mac'),':').decode()
   logging.info("> MAC: " + mac)
-  
+
   # Disconnect when necessary
   status = dump_status()
   if status >= CYW43_LINK_JOIN and status < CYW43_LINK_UP:
@@ -238,7 +238,7 @@ def reconnect_wifi(ssid, password, country, hostname=None):
 
   ip, subnet, gateway, dns = wlan.ifconfig()
   logging.info(f"> IP: {ip}, Subnet: {subnet}, Gateway: {gateway}, DNS: {dns}")
-  
+
   elapsed_ms = time.ticks_ms() - start_ms
   logging.info(f"> Elapsed: {elapsed_ms}ms")
   return elapsed_ms
@@ -275,10 +275,10 @@ def exception(exc):
 # returns True if we've used up 90% of the internal filesystem
 def low_disk_space():
   if not phew.remote_mount: # os.statvfs doesn't exist on remote mounts
-    return (os.statvfs(".")[3] / os.statvfs(".")[2]) < 0.1   
+    return (os.statvfs(".")[3] / os.statvfs(".")[2]) < 0.1
   return False
 
-# returns True if the rtc clock has been set recently 
+# returns True if the rtc clock has been set recently
 def is_clock_set():
   # is the year on or before 2020?
   if rtc.datetime()[0] <= 2020:
@@ -341,10 +341,10 @@ def sync_clock_from_ntp():
     return False
 
   logging.info("  - rtc synched")
-  
+
   # write out the sync time log
   with open("sync_time.txt", "w") as syncfile:
-    syncfile.write("{0:04d}-{1:02d}-{2:02d}T{3:02d}:{4:02d}:{5:02d}Z".format(*timestamp))  
+    syncfile.write("{0:04d}-{1:02d}-{2:02d}T{3:02d}:{4:02d}:{5:02d}Z".format(*timestamp))
 
   return True
 
@@ -356,7 +356,7 @@ def warn_led(state):
     rtc.set_clock_output(PCF85063A.CLOCK_OUT_1024HZ)
   elif state == WARN_LED_BLINK:
     rtc.set_clock_output(PCF85063A.CLOCK_OUT_1HZ)
-    
+
 # the pcf85063a defaults to 32KHz clock output so need to explicitly turn off
 warn_led(WARN_LED_OFF)
 
@@ -364,7 +364,7 @@ warn_led(WARN_LED_OFF)
 # returns the reason the board woke up from deep sleep
 def get_wake_reason():
   import wakeup
-  
+
   wake_reason = None
   if wakeup.get_gpio_state() & (1 << BUTTON_PIN):
     wake_reason = WAKE_REASON_BUTTON_PRESS
@@ -417,7 +417,7 @@ def get_sensor_readings():
 
   # write out the last time log
   with open("last_time.txt", "w") as timefile:
-    timefile.write(now_str)  
+    timefile.write(now_str)
 
   return readings
 
@@ -496,7 +496,7 @@ def upload_readings():
             # remove the sync time file to trigger a resync on next boot
             if helpers.file_exists("sync_time.txt"):
               os.remove("sync_time.txt")
-             
+
             # write out that we want to attempt a reupload
             with open("reattempt_upload.txt", "w") as attemptfile:
               attemptfile.write("")
@@ -517,7 +517,7 @@ def upload_readings():
 
       except KeyError:
         logging.error(f"  ! skipping '{cache_file[0]}' as it is missing data. It was likely created by an older version of the enviro firmware")
-        
+
   except ImportError:
     logging.error(f"! cannot find destination {destination}")
     return False
@@ -606,7 +606,7 @@ def sleep(time_override=None):
     minute = math.floor(minute / config.reading_frequency) * config.reading_frequency
     minute += config.reading_frequency
 
-  while minute >= 60:      
+  while minute >= 60:
     minute -= 60
     hour += 1
   if hour >= 24:
