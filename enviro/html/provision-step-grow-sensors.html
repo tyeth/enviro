@@ -34,13 +34,13 @@
     <p>If you have pumps connected to your Enviro Grow, you can enable and disable auto-watering below. Grow will automatically water your pots until the soil reaches the target moisture level set in the previous step.</p>
 
     <ul id="auto_watering" class="picker">
-      <li data-auto-water="True"> 
+      <li data-auto-water="True">
         Yes
       </li>
-      <li data-auto-water="False" > 
+      <li data-auto-water="False" >
         No
       </li>
-    </ul>        
+    </ul>
     <input type="hidden" id="auto_water" name="auto_water" value="{{config.auto_water}}" />
 
     <script>
@@ -53,12 +53,12 @@
             caretPos -= 1
           }
           document.getElementById(target).value = clamped
-          this.selectionStart = this.selectionEnd = caretPos 
+          this.selectionStart = this.selectionEnd = caretPos
         })
       }
 
       function selectAutoWater(auto_water) {
-        document.querySelectorAll("#auto_watering >li").forEach((listItem) => {          
+        document.querySelectorAll("#auto_watering >li").forEach((listItem) => {
           if(listItem.dataset.autoWater == auto_water) {
             listItem.classList.add("active")
           }else{

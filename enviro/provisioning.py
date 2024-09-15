@@ -55,7 +55,7 @@ logging.info("> creating web server...")
 # TODO This did not seem to work for me...
 @server.route("/wrong-host-redirect", methods=["GET"])
 def wrong_host_redirect(request):
-  # if the client requested a resource at the wrong host then present 
+  # if the client requested a resource at the wrong host then present
   # a meta redirect so that the captive portal browser can be sent to the correct location
   body = f"<!DOCTYPE html><head><meta http-equiv=\"refresh\" content=\"0;URL='http://{DOMAIN}/provision-welcome'\" /></head>"
   return body
@@ -86,7 +86,7 @@ def provision_step_2_wifi(request):
     return redirect(f"http://{DOMAIN}/provision-step-3-logging")
   else:
     return render_template("enviro/html/provision-step-2-wifi.html", board=model)
-  
+
 
 @server.route("/provision-step-3-logging", methods=["GET", "POST"])
 def provision_step_3_logging(request):
@@ -97,7 +97,7 @@ def provision_step_3_logging(request):
     return redirect(f"http://{DOMAIN}/provision-step-4-destination")
   else:
     return render_template("enviro/html/provision-step-3-logging.html", board=model)
-    
+
 
 @server.route("/provision-step-4-destination", methods=["GET", "POST"])
 def provision_step_4_destination(request):
@@ -117,13 +117,17 @@ def provision_step_4_destination(request):
     # adafruit io
     config.adafruit_io_username = request.form["adafruit_io_username"]
     config.adafruit_io_key = request.form["adafruit_io_key"]
+    try:
+        config.timezone = request.form["timezone"].strip() if request.form["timezone"].strip() != "" else None
+    except ValueError:
+        config.timezone = None
 
     # influxdb
     config.influxdb_org = request.form["influxdb_org"]
     config.influxdb_url = request.form["influxdb_url"]
     config.influxdb_token = request.form["influxdb_token"]
     config.influxdb_bucket = request.form["influxdb_bucket"]
-    
+
     write_config()
 
     if model == "grow":
@@ -132,7 +136,7 @@ def provision_step_4_destination(request):
       return redirect(f"http://{DOMAIN}/provision-step-5-done")
   else:
     return render_template("enviro/html/provision-step-4-destination.html", board=model)
-    
+
 
 @server.route("/provision-step-grow-sensors", methods=["GET", "POST"])
 def provision_step_grow_sensors(request):
@@ -152,7 +156,7 @@ def provision_step_grow_sensors(request):
       config.moisture_target_c = int(request.form["moisture_target_c"])
     except ValueError:
       pass
-    
+
     write_config()
 
     return redirect(f"http://{DOMAIN}/provision-step-5-done")
@@ -172,7 +176,7 @@ def provision_step_5_done(request):
     return
 
   return render_template("enviro/html/provision-step-5-done.html", board=model)
-    
+
 
 @server.route("/networks.json")
 def networks(request):
@@ -197,7 +201,7 @@ def catchall(request):
     return serve_file(file)
 
   return "404 Not Found Buddy!", 404
-  
+
 
 # wait for a client to connect
 logging.info("> waiting for a client to connect")

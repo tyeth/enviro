@@ -68,14 +68,14 @@ def drip_noise():
   piezo_pwm.duty_u16(32768)
   for i in range(0, 10):
       f = i * 20
-      piezo_pwm.freq((f * f) + 1000)      
+      piezo_pwm.freq((f * f) + 1000)
       time.sleep(0.02)
   piezo_pwm.duty_u16(0)
 
 def water(moisture_levels):
   from enviro import config
   targets = [
-    config.moisture_target_a, 
+    config.moisture_target_a,
     config.moisture_target_b,
     config.moisture_target_c
   ]
@@ -121,7 +121,7 @@ def get_sensor_readings(seconds_since_last, is_usb_power):
     "moisture_b": round(moisture_levels[1], 2),
     "moisture_c": round(moisture_levels[2], 2)
   })
-  
+
 def play_tone(frequency = None):
   if frequency:
     piezo_pwm.freq(frequency)

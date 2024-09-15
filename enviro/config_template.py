@@ -41,6 +41,9 @@ mqtt_broker_ca_file = None
 adafruit_io_username = None
 adafruit_io_key = None
 
+# timezone settings - used if fetching time from adafruit.io
+timezone = None
+
 # influxdb settings
 influxdb_org = None
 influxdb_url = None
