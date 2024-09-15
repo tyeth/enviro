@@ -232,6 +232,10 @@ def reconnect_wifi(ssid, password, country, hostname=None):
   wlan.connect(ssid, password)
   try:
     wait_status(CYW43_LINK_UP)
+    ip,subnet,gateway,dns = wlan.ifconfig()
+    if ip == "0.0.0.0":
+      logging.warn("> Wifi IP is 0.0.0.0, waiting a few extra seconds")
+      time.sleep(3)
   except Exception as x:
     raise Exception(f"Failed to connect to SSID {ssid} (password: {password}): {x}")
   logging.info("> Connected successfully!")
