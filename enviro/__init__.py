@@ -112,6 +112,7 @@ vbus_present = Pin("WL_GPIO2", Pin.IN).value()
 # seem to cause issues. there is no obvious way to shut down the
 # wifi for a while properly to do this (wlan.disonnect() and
 # wlan.active(False) both seem to mess things up big style..)
+"""
 old_state = Pin(WIFI_CS_PIN).value()
 Pin(WIFI_CS_PIN, Pin.OUT, value=True)
 sample_count = 10
@@ -121,7 +122,6 @@ for i in range(0, sample_count):
 battery_voltage /= sample_count
 battery_voltage = round(battery_voltage, 3)
 Pin(WIFI_CS_PIN).value(old_state)
-"""
 
 # set up the button, external trigger, and rtc alarm pins
 rtc_alarm_pin = Pin(RTC_ALARM_PIN, Pin.IN, Pin.PULL_DOWN)
@@ -417,7 +417,7 @@ def get_sensor_readings():
 
 
   readings = get_board().get_sensor_readings(seconds_since_last, vbus_present)
-  # readings["voltage"] = 0.0 # battery_voltage #Temporarily removed until issue is fixed
+  readings["voltage"] = battery_voltage #Temporarily removed until issue is fixed
 
   # write out the last time log
   with open("last_time.txt", "w") as timefile:
