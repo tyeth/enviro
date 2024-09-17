@@ -88,6 +88,12 @@
         <fieldset>
           <input type="text" name="adafruit_io_key" value="{{config.adafruit_io_key}}" placeholder="e.g. 2f123d34567ac23bc23c234add54c8c8af3403a2" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" />
         </fieldset>
+        <br>
+        <h2>Enter the group key to associate with your feeds.</h2>
+        <aside>Get from group info/url, lowercase letters and numbers with dash separators - Defaults to "enviro"</aside>
+        <fieldset>
+          <input type="text" name="adafruit_io_group_name" value="{{config.adafruit_io_group_name}}" placeholder="e.g. enviro 🌱" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" maxlength="128" />
+        </fieldset>
       </div>
 
       <div id="destination_http">

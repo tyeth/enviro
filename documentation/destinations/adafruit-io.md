@@ -13,7 +13,8 @@ While Adafruit IO is a paid service we highly recommend it for its simplicity - 
 3. Click the key icon (API Key) in the menu at the top of the page
 4. Take a copy of your **Username** and **Key** (see note below!)
 5. Go to the **Feeds** page linked from the menu at the top of the page
-6. Create a new group called `enviro`
+6. Create a new group, we called ours `enviro` (or let the provisioning process create it). 
+If you want spaces or other fancy characters (emojis), manually create the group and copy the group key from the group info dialog, click ... or visit the Group for the info dialog.
 
 > Note: the access key is **very long** and you don't want to have to write it in by hand! We recommend you take a copy before you start the provisioning process so that you can copy and paste it into the field when needed.
 
