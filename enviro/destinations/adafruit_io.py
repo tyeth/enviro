@@ -11,7 +11,7 @@ def log_destination():
     )
 
 def check_group_exists_or_create():
-    url = f"http://io.adafruit.com/api/v2/{config.adafruit_io_username}/groups"
+    url = f"http://io.adafruit.us/api/v2/{config.adafruit_io_username}/groups"
     headers = {
         "X-AIO-Key": config.adafruit_io_key,
         "Content-Type": "application/json",
@@ -52,7 +52,7 @@ def fetch_time(synch_with_rtc=True, timeout=15, retry=True):
     timestamp = None
     try:
         # People might like to use tzinfo related things in RTC and datetime, but everything UTC for now
-        url = f"http://io.adafruit.com/api/v2/{config.adafruit_io_username}/integrations/time/struct?tz=UTC"
+        url = f"http://io.adafruit.us/api/v2/{config.adafruit_io_username}/integrations/time/struct?tz=UTC"
         headers = {
             "X-AIO-Key": config.adafruit_io_key,
             "Content-Type": "application/json",
@@ -165,7 +165,7 @@ def upload_reading(reading):
 
     # send the payload
     headers = {"X-AIO-Key": config.adafruit_io_key, "Content-Type": "application/json"}
-    url = f"http://io.adafruit.com/api/v2/{username}/groups/{group_name}/data"
+    url = f"http://io.adafruit.us/api/v2/{username}/groups/{group_name}/data"
 
     try:
         result = urequests.post(url, json=payload, headers=headers)
