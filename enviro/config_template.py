@@ -40,6 +40,7 @@ mqtt_broker_ca_file = None
 # adafruit ui settings
 adafruit_io_username = None
 adafruit_io_key = None
+adafruit_io_group_name = None
 
 # influxdb settings
 influxdb_org = None
